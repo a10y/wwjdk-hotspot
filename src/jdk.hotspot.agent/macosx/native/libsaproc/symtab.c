@@ -63,7 +63,7 @@ void build_search_table(symtab_t *symtab) {
     key.size = strlen(key.data) + 1;
     value.data = &(symtab->symbols[i]);
     value.size = sizeof(symtab_symbol);
-    (*symtab->hash_table->put)(symtab->hash_table, &key, &value, 0);
+    (*symtab->hash_table->put)(symtab->hash_table, NULL, &key, &value, 0);
 
     // check result
     if (is_debug()) {
@@ -72,7 +72,7 @@ void build_search_table(symtab_t *symtab) {
       strcpy(tmp, symtab->symbols[i].name);
       rkey.data = tmp;
       rkey.size = strlen(tmp) + 1;
-      (*symtab->hash_table->get)(symtab->hash_table, &rkey, &rvalue, 0);
+      (*symtab->hash_table->get)(symtab->hash_table, NULL, &rkey, &rvalue, 0);
       // we may get a copy back so compare contents
       symtab_symbol *res = (symtab_symbol *)rvalue.data;
       if (strcmp(res->name, symtab->symbols[i].name)  ||
@@ -371,7 +371,7 @@ uintptr_t search_symbol(struct symtab* symtab, uintptr_t base, const char *sym_n
 
   key.data = (char*)(uintptr_t)sym_name;
   key.size = strlen(sym_name) + 1;
-  ret = (*symtab->hash_table->get)(symtab->hash_table, &key, &value, 0);
+  ret = (*symtab->hash_table->get)(symtab->hash_table, NULL, &key, &value, 0);
   if (ret == 0) {
     symtab_symbol *sym = value.data;
     uintptr_t rslt = (uintptr_t) ((char*)base + sym->offset);
